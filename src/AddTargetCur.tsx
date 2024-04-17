@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import TargetCurrency from "./TargetCurrency";
 
-export default function AddTargetCur({ inputValue, selectedCurrency }) {
+export default function AddTargetCur({ debouncedSearch, selectedCurrency }) {
   const [result, setResult] = useState<number>(0);
 
   const handleTargetCurrencySelect = (currency: string) => {
@@ -20,7 +20,7 @@ export default function AddTargetCur({ inputValue, selectedCurrency }) {
           );
           const responseData = await response.json();
           setResult(
-            responseData.data.rates[selectedTargetCurrency] * Number(inputValue)
+            responseData.data.rates[selectedTargetCurrency] * Number(debouncedSearch)
           );
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -35,7 +35,7 @@ export default function AddTargetCur({ inputValue, selectedCurrency }) {
       }, 60000 * 5);
       return () => clearInterval(interval);
     }
-  }, [inputValue, selectedTargetCurrency, selectedCurrency]);
+  }, [debouncedSearch, selectedTargetCurrency, selectedCurrency]);
 
   return (
     <div className="TargetCurrency">

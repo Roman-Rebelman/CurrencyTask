@@ -32,7 +32,7 @@ const TargetCurrency: React.FC<TargetCurrencyProps> = ({
 
   return (
     <Select
-      style={{ width: 100, fontFamily: "monospace" }}
+      style={{ width: 100}}
       onChange={handleTargetCurrencySelect}
       options={
         data &&
