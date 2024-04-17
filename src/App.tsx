@@ -3,23 +3,26 @@ import BaseCurrency from "./BaseCurrency";
 import TargetCurrency from "./TargetCurrency";
 import { InputNumber } from "antd";
 
-function App() {
-  const [selectedCurrency, setSelectedCurrency] = useState(null);
-  const [selectedTargetCurrency, setSelectedTargetCurrency] = useState(null);
-  const [inputValue, setInputValue] = useState(0);
-  const [result, setResult] = useState(0);
+const App: React.FC = () => {
+  const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
+  const [selectedTargetCurrency, setSelectedTargetCurrency] = useState<
+    string | null
+  >(null);
+  const [inputValue, setInputValue] = useState<number>(0);
+  const [result, setResult] = useState<number>(0);
   console.log(result);
+  
 
-  const handleBaseCurrencySelect = (currency) => {
+  const handleBaseCurrencySelect = (currency: string) => {
     setSelectedCurrency(currency);
-  }
+  };
 
-  const handleTargetCurrencySelect = (currency) => {
+  const handleTargetCurrencySelect = (currency: string) => {
     setSelectedTargetCurrency(currency);
   };
 
-  function onInputValueChange(value) {
-    setInputValue(Number(value).toFixed(2));
+  function onInputValueChange(value: string | number | undefined | null) {
+    setInputValue(Number(Number(value).toFixed(2)));
   }
 
   useEffect(() => {
@@ -31,7 +34,7 @@ function App() {
           );
           const responseData = await response.json();
           setResult(
-            responseData.data.rates[selectedTargetCurrency] * inputValue
+            responseData.data.rates[selectedTargetCurrency] * Number(inputValue)
           );
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -75,10 +78,10 @@ function App() {
                   />
                 </td>
                 <td>
-                  <InputNumber<string>
+                  <InputNumber
                     value={inputValue}
                     style={{ width: 200 }}
-                    min="0"
+                    min={0}
                     step="1"
                     onChange={onInputValueChange}
                     stringMode
@@ -92,6 +95,6 @@ function App() {
       </div>
     </>
   );
-}
+};
 
 export default App;

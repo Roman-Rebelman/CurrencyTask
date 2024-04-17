@@ -2,9 +2,20 @@ import React, { useEffect, useState } from "react";
 import { Select } from "antd";
 import CurrencyFlag from "react-currency-flags";
 
-export default function BaseCurrency({ handleBaseCurrencySelect }) {
+interface Currency {
+  id: string;
+  name: string;
+}
+
+interface BaseCurrencyProps {
+  handleBaseCurrencySelect: (currency: string) => void;
+}
+
+const BaseCurrency: React.FC<BaseCurrencyProps> = ({
+  handleBaseCurrencySelect,
+}) => {
   const url = "https://api.coinbase.com/v2/currencies";
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<Currency[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -14,10 +25,12 @@ export default function BaseCurrency({ handleBaseCurrencySelect }) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const responseData = await response.json();
-        const currencies = responseData.data.map((item) => ({
-          id: item.id,
-          name: item.name,
-        }));
+        const currencies: Currency[] = responseData.data.map(
+          (item: Currency) => ({
+            id: item.id,
+            name: item.name,
+          })
+        );
 
         setData(currencies);
       } catch (error) {
@@ -26,7 +39,7 @@ export default function BaseCurrency({ handleBaseCurrencySelect }) {
     };
 
     fetchData();
-  }, []);
+  }, [data]);
 
   return (
     <div>
@@ -44,4 +57,6 @@ export default function BaseCurrency({ handleBaseCurrencySelect }) {
       )}
     </div>
   );
-}
+};
+
+export default BaseCurrency;

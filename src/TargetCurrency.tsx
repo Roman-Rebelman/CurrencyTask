@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { Select } from "antd";
 
-export default function TargetCurrency({ handleTargetCurrencySelect }) {
-  const [data, setData] = useState(null);
+interface TargetCurrencyProps {
+  handleTargetCurrencySelect: (currency: string) => void;
+}
+
+const TargetCurrency: React.FC<TargetCurrencyProps> = ({
+  handleTargetCurrencySelect,
+}) => {
+  const [data, setData] = useState<string[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://api.coinbase.com/v2/exchange-rates?currency=USD");
+        const response = await fetch(
+          "https://api.coinbase.com/v2/exchange-rates?currency=USD"
+        );
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const responseData = await response.json();
-        const currencies = Object.keys(responseData.data.rates);
+        const currencies: string[] = Object.keys(responseData.data.rates);
         setData(currencies);
       } catch (error) {
         console.error("Fetch error:", error);
@@ -20,7 +28,7 @@ export default function TargetCurrency({ handleTargetCurrencySelect }) {
     };
 
     fetchData();
-  }, []);
+  }, [data]);
 
   return (
     <div>
@@ -38,4 +46,6 @@ export default function TargetCurrency({ handleTargetCurrencySelect }) {
       )}
     </div>
   );
-}
+};
+
+export default TargetCurrency;
