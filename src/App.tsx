@@ -1,99 +1,62 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import BaseCurrency from "./BaseCurrency";
-import TargetCurrency from "./TargetCurrency";
-import { InputNumber } from "antd";
+import { InputNumber, Button } from "antd";
+import AddTargetCur from "./AddTargetCur";
 
 const App: React.FC = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
-  const [selectedTargetCurrency, setSelectedTargetCurrency] = useState<
-    string | null
-  >(null);
   const [inputValue, setInputValue] = useState<number>(0);
-  const [result, setResult] = useState<number>(0);
-  console.log(result);
-  
+  const [addTargetCur, setAddTargetCur] = useState([{ id: 1 }]);
 
   const handleBaseCurrencySelect = (currency: string) => {
     setSelectedCurrency(currency);
   };
 
-  const handleTargetCurrencySelect = (currency: string) => {
-    setSelectedTargetCurrency(currency);
+  const onInputValueChange = (value: string | number | undefined | null) => {
+    setInputValue(Number(Number(value).toFixed(2)));
   };
 
-  function onInputValueChange(value: string | number | undefined | null) {
-    setInputValue(Number(Number(value).toFixed(2)));
-  }
+  const handleAddCurrency = () => {
+    setAddTargetCur([...addTargetCur, { id: addTargetCur.length + 1 }]);
+  };
 
-  useEffect(() => {
-    if (selectedCurrency && selectedTargetCurrency) {
-      const fetchCurrency = async () => {
-        try {
-          const response = await fetch(
-            `https://api.coinbase.com/v2/exchange-rates?currency=${selectedCurrency}`
-          );
-          const responseData = await response.json();
-          setResult(
-            responseData.data.rates[selectedTargetCurrency] * Number(inputValue)
-          );
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-        } catch (error) {
-          console.error("Fetch error:", error);
-        }
-      };
-      fetchCurrency();
-      const interval = setInterval(() => {
-        fetchCurrency();
-      }, 60000 * 5);
-      return () => clearInterval(interval);
-    }
-  }, [selectedCurrency, selectedTargetCurrency, inputValue]);
+  const handleResetCurrencies = () => {
+    setAddTargetCur([{ id: 1 }]);
+  };
 
   return (
-    <>
-      <div>
+    <div className="baseDiv">
         <h1>Конвертер валют</h1>
-        <div>
-          <table>
-            <thead>
-              <tr>
-                <td>Выбрать базовую валюту</td>
-                <td>Выбрать одну или несколько целевых валют</td>
-                <td>Ввести произвольную сумму</td>
-                <td>Результат</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <BaseCurrency
-                    handleBaseCurrencySelect={handleBaseCurrencySelect}
-                  />
-                </td>
-                <td>
-                  <TargetCurrency
-                    handleTargetCurrencySelect={handleTargetCurrencySelect}
-                  />
-                </td>
-                <td>
-                  <InputNumber
-                    value={inputValue}
-                    style={{ width: 200 }}
-                    min={0}
-                    step="1"
-                    onChange={onInputValueChange}
-                    stringMode
-                  />
-                </td>
-                <td>{result.toFixed(2)}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div>Выберите базовую валюту</div>
+        <p>
+          <BaseCurrency handleBaseCurrencySelect={handleBaseCurrencySelect} />
+        </p>
+        <p>Введите произвольную сумму</p>
+        <p>
+          <InputNumber
+            value={inputValue}
+            style={{ width: 200 }}
+            min={0}
+            step="1"
+            onChange={onInputValueChange}
+            stringMode
+          />
+        </p>
+        <p>Выберите одну или несколько целевых валют</p>
+        <div className="allTargetBlock">
+            {addTargetCur.map((item) => (
+              <AddTargetCur
+                inputValue={inputValue}
+                selectedCurrency={selectedCurrency}
+                key={item.id}
+              />
+            ))}
         </div>
-      </div>
-    </>
+        <div className="buttons">
+        <Button onClick={handleAddCurrency}>Добавить целевую валюту</Button>
+        <Button onClick={handleResetCurrencies}>Сбросить выбранные валюты</Button>
+        </div>
+    </div>
   );
 };
 

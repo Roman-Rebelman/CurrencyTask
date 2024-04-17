@@ -39,23 +39,19 @@ const BaseCurrency: React.FC<BaseCurrencyProps> = ({
     };
 
     fetchData();
-  }, [data]);
+  }, []);
 
   return (
-    <div>
-      {data ? (
-        <Select style={{ width: 600 }} onChange={handleBaseCurrencySelect}>
-          {data.map((currency) => (
-            <Select.Option key={currency.id} value={currency.id}>
-              <CurrencyFlag currency={currency.id} size="sm" />
-              {` ${currency.id} - ${currency.name}`}
-            </Select.Option>
-          ))}
-        </Select>
-      ) : (
-        <div>Loading...</div>
-      )}
-    </div>
+    <>
+      <Select style={{ width: 400 }} onChange={handleBaseCurrencySelect} disabled={!data}>
+        {data && data.map((currency) => (
+          <Select.Option key={currency.id} value={currency.id}>
+            <CurrencyFlag currency={currency.id} size="sm" />
+            {` ${currency.id} - ${currency.name}`}
+          </Select.Option>
+        ))}
+      </Select>
+    </>
   );
 };
 

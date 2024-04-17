@@ -28,23 +28,21 @@ const TargetCurrency: React.FC<TargetCurrencyProps> = ({
     };
 
     fetchData();
-  }, [data]);
+  }, []);
 
   return (
-    <div>
-      {data ? (
-        <Select
-          style={{ width: 120 }}
-          onChange={handleTargetCurrencySelect}
-          options={data.map((currency) => ({
-            value: currency,
-            label: currency,
-          }))}
-        />
-      ) : (
-        <div>Loading...</div>
-      )}
-    </div>
+    <Select
+      style={{ width: 100, fontFamily: "monospace" }}
+      onChange={handleTargetCurrencySelect}
+      options={
+        data &&
+        data.map((currency) => ({
+          value: currency,
+          label: currency,
+        }))
+      }
+      disabled={!data}
+    />
   );
 };
 
