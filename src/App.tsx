@@ -2,8 +2,12 @@ import React, { useState } from "react";
 import BaseCurrency from "./BaseCurrency";
 import { InputNumber, Button } from "antd";
 import AddTargetCur from "./AddTargetCur";
+
+// fixme: Сборка падает с ошибкой `Could not find a declaration file for module './useDebouds'. 'CurrencyTask/src/useDebouds.jsx' implicitly has an 'any' type.`
+//        Добавил `useDebouds.d.ts`.
 import useDebounce from "./useDebouds";
 
+// fixme: При загрузке страницы зачем-то делается делается запрос к API `/v2/exchange-rates?currency=USD`.
 const App: React.FC = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState<number>(0);
@@ -15,14 +19,19 @@ const App: React.FC = () => {
   };
 
   const onInputValueChange = (value: string | number | undefined | null) => {
+    // fixme: При изменении суммы к API делается N запросов, где N - количество непустых целевых валют.
+    // todo: Кол-во знаков после запятой задано как "магическое число". Это было бы не критично, но оно задается в двух разных местах.
+    //       В целом, форматирование сумм можно было бы вынести в отдельную функцию.
     setInputValue(Number(Number(value).toFixed(2)));
   };
 
   const handleAddCurrency = () => {
+    // fixme: При добавлении целевой валюты зачем-то делается делается запрос к API `/v2/exchange-rates?currency=USD`.
     setAddTargetCur([...addTargetCur, { id: addTargetCur.length + 1 }]);
   };
 
   const handleResetCurrencies = () => {
+    // todo: При сбросе первая валюта не сбрасывается на пустое значение, как при первоначальной загрузке страницы.
     setAddTargetCur([{ id: 1 }]);
   };
 
