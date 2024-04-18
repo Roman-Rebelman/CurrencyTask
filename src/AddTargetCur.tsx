@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import TargetCurrency from "./TargetCurrency";
 
-export default function AddTargetCur({ debouncedSearch, selectedCurrency }) {
+interface AddTargetCurProps {
+  debouncedSearch: number; 
+  selectedCurrency: string | null;
+}
+
+export default function AddTargetCur({
+  debouncedSearch,
+  selectedCurrency
+}: AddTargetCurProps) {
   const [result, setResult] = useState<number>(0);
 
   const handleTargetCurrencySelect = (currency: string) => {

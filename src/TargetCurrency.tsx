@@ -5,10 +5,15 @@ interface TargetCurrencyProps {
   handleTargetCurrencySelect: (currency: string) => void;
 }
 
+interface Option {
+  value: string;
+  label: string;
+}
+
 const TargetCurrency: React.FC<TargetCurrencyProps> = ({
   handleTargetCurrencySelect,
 }) => {
-  const [data, setData] = useState<string[] | null>(null);
+  const [data, setData] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,13 +40,14 @@ const TargetCurrency: React.FC<TargetCurrencyProps> = ({
       style={{ width: 100}}
       onChange={handleTargetCurrencySelect}
       options={
-        data &&
-        data.map((currency) => ({
-          value: currency,
-          label: currency,
-        }))
+        data.length > 0 ? 
+          data.map((currency) => ({
+            value: currency,
+            label: currency,
+          })) as Option[]
+        : []
       }
-      disabled={!data}
+      disabled={data.length === 0}
     />
   );
 };

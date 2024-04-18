@@ -47,11 +47,11 @@ const App: React.FC = () => {
       <p>Выберите одну или несколько целевых валют</p>
       <div className="allTargetBlock">
         {addTargetCur.map((item) => (
-            <AddTargetCur
-              debouncedSearch={debouncedSearch}
-              selectedCurrency={selectedCurrency}
-              key={item.id}
-            />
+          <AddTargetCur
+            debouncedSearch={debouncedSearch}
+            selectedCurrency={selectedCurrency}
+            key={item.id}
+          />
         ))}
       </div>
       <div className="buttons">
