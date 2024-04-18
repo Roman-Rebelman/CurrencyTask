@@ -39,6 +39,7 @@ const TargetCurrency: React.FC<TargetCurrencyProps> = ({
     <Select
       style={{ width: 100}}
       onChange={handleTargetCurrencySelect}
+      // fixme: Думаю, для целевых валют можно было так же использовать CurrencyFlag. (Это есть в ТЗ: "Рядом с каждой из валют необходимо отображать соответствующую иконку.")
       options={
         data.length > 0 ? 
           data.map((currency) => ({

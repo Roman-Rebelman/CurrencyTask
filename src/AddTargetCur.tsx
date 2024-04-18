@@ -28,6 +28,7 @@ export default function AddTargetCur({
           );
           const responseData = await response.json();
           setResult(
+            // todo: Вычисление суммы в целевой валюте - это бизнес-логика приложения. Ее хорошо бы обособить в отдельной функции.
             responseData.data.rates[selectedTargetCurrency] * Number(debouncedSearch)
           );
           if (!response.ok) {
@@ -40,6 +41,8 @@ export default function AddTargetCur({
       fetchCurrency();
       const interval = setInterval(() => {
         fetchCurrency();
+        // todo: Время обновления задано как "магическое число". Такое следует выносить в константы и описывать комментарием.
+        //       С большой вероятностью может задаваться из конфига или переменной окружения.
       }, 60000 * 5);
       return () => clearInterval(interval);
     }
